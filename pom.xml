@@ -49,7 +49,7 @@
         <executions>
           <execution>
             <id>add-module-info-to-dependencies</id>
-            <phase>generate-resources</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>add-module-info</goal>
             </goals>
