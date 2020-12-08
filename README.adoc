@@ -1,0 +1,55 @@
+= Moditect SnakeYAML Showcase
+
+This github project aims to show how to create a jlink `.zip` bundle
+containing a `org.yaml:snakeyaml` dependency.
+
+Three plugins are being actively used for this:
+
+* https://github.com/moditect/moditect[moditect-maven-plugin] to add a module descriptor (`module-info.class`) to the snakeyaml dependency.
+* maven-compiler-plugin to pick up the new dependency.
+* Finally, the brand new https://github.com/apache/maven-jlink-plugin[maven-jlink-plugin] to create the jlink archive.
+
+== Explanation of…
+
+=== … the moditect plugin
+
+The moditect documentation is a little… sparse.
+
+In the case you do have an existing dependency (like snakeyaml) which does
+not have a module-descriptor, you want to execute the `add-module-info` target.
+This will create a modified `.jar` archive containing a `module-info.class` file.
+
+You also want this to be generated in the `generate-resources` phase.
+The udertow showcase uses this goal in the `package` phase for other purposes.
+
+=== … the compiler plugin
+
+By appending the argument `--module-path=$target/modules`,
+the compiler plugin will pick up the modified snakeyaml jar file
+and use it instead of the original one.
+
+=== … the jlink plugin
+
+I am using a custom jlink plugin with two additional PRs already merged:
+
+* https://github.com/apache/maven-jlink-plugin/pull/21[Classifier-PR] to have both a jar artifact and a zip artifact.
+* https://github.com/apache/maven-jlink-plugin/pull/14[--add-options-PR] to be able to add custom java runtime arguments.
+
+Besides the `-Xmx` argument, I added a launcher with the name `start`.
+It shows the syntax.
+
+== Try it out
+
+The main will read a file `test.yaml` and output it’s using a `.foreach()` statement.
+
+[source,bash]
+----
+$ mvn clean verify -Pjlink
+[…]
+$ ./target/maven-jlink/bin/start
+id: [abc].
+name: [😄 Γεια σας].
+----
+
+You can also extract the archive `target/snakeyaml-moditect-showcase-1.0.0-SNAPSHOT.zip`.
+It contains the same binary (`bin/start`).
