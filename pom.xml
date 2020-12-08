@@ -113,7 +113,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jlink-plugin</artifactId>
-        <version>3.0.0.ENHANCED</version>
+        <version>3.0.0</version>
         <extensions>true</extensions>
         <!-- the default execution is default-jlink -->
         <configuration>
